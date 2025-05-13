@@ -79,6 +79,8 @@ In columns 5 and 6 of the result you can see the major, respectively the minor f
 
 Certain major identifiers are statically assigned to devices (in the Documentation/admin-guide/devices.txt file from the kernel sources).
 
+[Linux Device Numbers Documentation](https://elixir.bootlin.com/linux/v5.10.101/source/Documentation/admin-guide/devices.txt)
+
 When choosing the identifier for a new device, you can use two methods  
 
 - static (choose a number that does not seem to be used already)  
@@ -125,3 +127,27 @@ With Static method , you tell the kernel what device numbers you want (the start
 With Dynamic method, you tell the kernel how many device numbers you need (the starting minor number and count) and it will find a starting major number for you, if one is available, of course.
 
 Partially to avoid conflict with other device drivers, it’s considered preferable to use the Dynamic method function, which will dynamically allocate the device numbers for you.
+
+---
+
+## static assignment and unallocation of device identifiers:
+
+int register_chrdev_region (dev_t from,	unsigned count,	const char *name);
+
+Description: register a range of device numbers
+
+Arguments:
+
+from : the first in the desired range of device numbers; must include the major number.
+
+count: the number of consecutive device numbers required
+
+name: the name of the device or driver. This will appear in /proc/devices
+
+Return Value:
+zero on success, a negative error code on failure.
+
+void unregister_chrdev_region(dev_t from, unsigned int count);
+
+Header File: <linux/fs.h>
+
