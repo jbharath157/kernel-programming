@@ -48,16 +48,19 @@ This design allows user-space applications to interact with hardware devices usi
 
 ![Picture-1](./files/Character_dev.png)
 
+--- 
+
 ## Major and Minor Number
 
--     Connection between the application and the device file is based on the name of the device file.  
--     However the connection between the device file and the device driver is based on the number of the device file, not the name.
+- Connection between the application and the device file is based on the name of the device file.  
+- However the connection between the device file and the device driver is based on the number of the device file, not the name.
 
 A device ID/number consists of two parts  
-	Major Number : identifies the device type (IDE disk, SCSI disk, serial port, etc.)  
-	Minor Number : identifies the device (first disk, second serial port, etc.)
 
--	Most times, the major identifies the driver, while the minor identifies each physical device served by the driver.
+- Major Number : identifies the device type (IDE disk, SCSI disk, serial port, etc.)  
+- Minor Number : identifies the device (first disk, second serial port, etc.)
+
+- Most times, the major identifies the driver, while the minor identifies each physical device served by the driver.
 
 ```
 ls -l /dev/ttyS*
@@ -77,8 +80,9 @@ In columns 5 and 6 of the result you can see the major, respectively the minor f
 Certain major identifiers are statically assigned to devices (in the Documentation/admin-guide/devices.txt file from the kernel sources).
 
 When choosing the identifier for a new device, you can use two methods  
-	static (choose a number that does not seem to be used already)  
-	dynamic (kernel will give you a device number)
+
+- static (choose a number that does not seem to be used already)  
+- dynamic (kernel will give you a device number)
 
 ---
 
@@ -103,4 +107,21 @@ To create a device number from major and minor number:
 
 Header File: linux/kdev_t.h
 
+---
 
+## Allocating Major and Minor Number
+
+Two ways:
+
+- Static
+- Dynamic
+
+Difference between static and dynamic method
+
+Static method is only really useful if you know in advance which major number you want to start with. 
+
+With Static method , you tell the kernel what device numbers you want (the start major/minor number and count) and it either gives them to you or not (depending on availability).
+
+With Dynamic method, you tell the kernel how many device numbers you need (the starting minor number and count) and it will find a starting major number for you, if one is available, of course.
+
+Partially to avoid conflict with other device drivers, it’s considered preferable to use the Dynamic method function, which will dynamically allocate the device numbers for you.
