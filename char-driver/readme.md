@@ -57,10 +57,13 @@ This design allows user-space applications to interact with hardware devices usi
 
 A device ID/number consists of two parts  
 
-- Major Number : identifies the device type (IDE disk, SCSI disk, serial port, etc.)  
+- Major Number : identifies the device type (IDE disk, SCSI disk, serial port, etc.)
 - Minor Number : identifies the device (first disk, second serial port, etc.)
 
 - Most times, the major identifies the driver, while the minor identifies each physical device served by the driver.
+
+Theoretical max major number in Linux is 4095 (from dev_t structure) and minor. Based on 32-bit device number structure (12 bits for major, 20 for minor)
+Character devices are limited to major numbers 0–511 due to CHRDEV_MAJOR_MAX variable in the kernel (linux/fs.h).
 
 ```
 ls -l /dev/ttyS*
@@ -136,7 +139,7 @@ int register_chrdev_region (dev_t from,	unsigned count,	const char *name);
 
 Description: register a range of device numbers
 
-Arguments:
+**Arguments:**
 
 from : the first in the desired range of device numbers; must include the major number.
 
@@ -144,10 +147,40 @@ count: the number of consecutive device numbers required
 
 name: the name of the device or driver. This will appear in /proc/devices
 
-Return Value:
+**Return Value:**
 zero on success, a negative error code on failure.
 
 void unregister_chrdev_region(dev_t from, unsigned int count);
 
 Header File: <linux/fs.h>
+
+## Dynamic Allocation
+
+If we dont want fixed major and minor number please use this method.
+
+This method will allocate the major number dynamically to your driver which is available.
+
+```
+int alloc_chrdev_region (dev_t *  dev,
+		 	unsigned  	baseminor,
+ 			unsigned  	count,
+		 	const char *  	name);
+```
+
+**Description**
+
+Allocates a range of char device numbers.
+The major number will be chosen dynamically, and returned (along with the first minor number) in dev
+
+**Arguments**
+
+dev 		-->	output parameter for first assigned number
+baseminor 	--> 	first of the requested range of minor numbers
+count		-->	the number of minor numbers required
+name		-->	the name of the associated device or driver
+
+
+**Return Value**
+Returns zero or a negative error code.
+
 
