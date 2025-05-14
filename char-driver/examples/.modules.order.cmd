@@ -1,0 +1,1 @@
+cmd_/home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/modules.order := {   echo /home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/old-way-character-driver.ko; :; } > /home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/modules.order

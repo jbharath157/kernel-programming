@@ -148,6 +148,7 @@ count: the number of consecutive device numbers required
 name: the name of the device or driver. This will appear in /proc/devices
 
 **Return Value:**
+
 zero on success, a negative error code on failure.
 
 void unregister_chrdev_region(dev_t from, unsigned int count);
@@ -181,6 +182,7 @@ name		-->	the name of the associated device or driver
 
 
 **Return Value**
+
 Returns zero or a negative error code.
 
 

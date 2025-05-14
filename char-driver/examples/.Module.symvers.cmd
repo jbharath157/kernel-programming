@@ -1,0 +1,1 @@
+cmd_/home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/Module.symvers :=  sed 's/ko$$/o/'  /home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/modules.order | scripts/mod/modpost -m      -o /home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/Module.symvers -e -i Module.symvers -T - 

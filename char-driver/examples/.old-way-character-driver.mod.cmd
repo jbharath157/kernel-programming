@@ -1,0 +1,1 @@
+cmd_/home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/old-way-character-driver.mod := printf '%s\n'   old-way-character-driver.o | awk '!x[$$0]++ { print("/home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/"$$0) }' > /home/bharath/work/git-repo/personal/kernel-programming/char-driver/examples/old-way-character-driver.mod
