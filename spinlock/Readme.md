@@ -241,3 +241,45 @@ spin_unlock_irqrestore();
 
 ---
 
+# Is the kernel preemption disabled when the spinlock is acquired?
+
+Yes. Any time kernel code holds a spinlock, **preemption is disabled** on the **current processor**.
+
+This is necessary to ensure that:
+
+- The current thread cannot be preempted while holding the lock.
+- Another thread on the same CPU cannot be scheduled and try to re-acquire the same spinlock, which would lead to a **deadlock**.
+
+## 🔧 Locking Behavior
+
+- `spin_lock()` → **Disables kernel preemption**
+- `spin_unlock()` → **Enables kernel preemption back**
+
+This ensures **mutual exclusion** even on **preemptible kernels**, and it's why spinlocks are safe for **short atomic critical sections**.
+
+---
+
+# Important Points with Spinlocks
+
+1. **If a lock is acquired but never released, the system is rendered unusable.**
+
+   - All processors — including the one that acquired the lock — will eventually need to enter the critical region.
+   - They spin endlessly waiting for the lock to be released.
+   - If the lock is never released, this results in a **deadlock** and system stall.
+
+2. **Spinlocks must not be held for long durations.**
+
+   - Other processors waiting for the lock become **idle and unproductive**.
+   - This severely affects system responsiveness and overall performance.
+
+3. **Code protected by spinlocks must not sleep.**
+
+   - You must ensure that **no function inside the spinlocked region can sleep**.
+   - Example: **Do NOT call `kmalloc()` with `GFP_KERNEL`**, as it may sleep if memory is low.
+   - Sleeping while holding a spinlock can cause **deadlocks** or **kernel warnings** like:
+     ```
+     BUG: sleeping function called from invalid context
+     ```
+
+> ✅ Always use `GFP_ATOMIC` inside spinlocked code if memory allocation is required.
+
